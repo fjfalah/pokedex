@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import React from 'react';
+import styled from 'styled-components';
 
 const Root = styled.div`
   padding: 10px;
@@ -18,4 +18,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-asdadasdasdasd;
