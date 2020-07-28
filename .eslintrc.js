@@ -37,6 +37,7 @@ module.exports = {
     ],
     '@typescript-eslint/no-unused-vars': 1,
     '@typescript-eslint/no-var-requires': 1,
+    'import/no-named-as-default': 0,
     'jsx-a11y/anchor-is-valid': 0,
     'react/jsx-props-no-spreading': 'off',
     'jsx-a11y/no-static-element-interactions': [
