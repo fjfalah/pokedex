@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import Head from 'next/head';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import React from 'react';
@@ -48,6 +49,9 @@ const PokemonDetailPage: React.FC = () => {
   if (loading && !data) {
     return (
       <Section>
+        <Head>
+          <title>Pokedex</title>
+        </Head>
         <Loading />
       </Section>
     );
@@ -77,6 +81,9 @@ const PokemonDetailPage: React.FC = () => {
     } = pokemonDetail;
     return (
       <>
+        <Head>
+          <title>Pokedex | {name}</title>
+        </Head>
         <Section>
           <HeaderWrapper>
             <ButonBack onClick={handleBack}>&lt; Back</ButonBack>

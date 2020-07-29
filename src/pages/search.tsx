@@ -1,4 +1,5 @@
 import { useLazyQuery } from '@apollo/client';
+import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
 import React, { useCallback, useState } from 'react';
@@ -58,6 +59,9 @@ const HomePage: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <title>Pokedex | Search</title>
+      </Head>
       <Section>
         <HeaderWrapper>
           <Title>Pokemon Index</Title>

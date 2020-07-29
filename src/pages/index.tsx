@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import Head from 'next/head';
 import Link from 'next/link';
 import React, { useCallback, useState } from 'react';
 
@@ -74,6 +75,9 @@ const HomePage: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <title>Pokedex | Home</title>
+      </Head>
       <Section>
         <HeaderWrapper>
           <Title>Pokemon Index</Title>
