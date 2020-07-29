@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from '../themes';
 
 const Button = styled.button`

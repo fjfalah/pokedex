@@ -57,7 +57,6 @@ const PokemonDetailPage: React.FC = () => {
 
   const handleBack = () => Router.back();
 
-  console.log(pokemonDetail);
   if (pokemonDetail && !loading) {
     const {
       name,

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const escape = require('shell-quote').quote;
 
 const isWin = process.platform === 'win32';
