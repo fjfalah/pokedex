@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styled, { theme } from '../themes';
+import styled from '../themes';
 
 const Root = styled.div`
   display: flex;

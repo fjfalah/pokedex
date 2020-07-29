@@ -1,7 +1,6 @@
-import { useQuery, useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import Link from 'next/link';
 import React, { useCallback, useState } from 'react';
-import styled from 'styled-components';
 
 import {
   InputSearch,
@@ -9,9 +8,9 @@ import {
   Loading,
   Section,
   Select,
+  InfiniteScroll,
 } from '../components';
 import {
-  CloseButton,
   FilterWrapper,
   HeaderWrapper,
   Label,
@@ -19,25 +18,23 @@ import {
   PokemonsWrapper,
   Title,
 } from '../components/HomeComponent';
-import getPokemonDetailQuery from '../graphql/pokemon.query';
 import getPokemonListQuery from '../graphql/pokemons.query';
 import getPokemonClasificationTypeQuery from '../graphql/pokemonType.query';
 
 const HomePage: React.FC = () => {
-  const [pokemons, setPokemons] = useState(null);
-  const [isFindResultSearch, setIsFindResultSearch] = useState(false);
-  const [resultSearch, setResultSearch] = useState(null);
+  const perPage = 20;
   const [activeType, setActiveType] = useState(null);
-  const { loading, error } = useQuery(getPokemonListQuery, {
+  const [hasMoreDataLoad, setHasMoreDataLoad] = useState(true);
+  const { loading, fetchMore, data } = useQuery(getPokemonListQuery, {
     variables: {
-      first: 20,
+      first: perPage,
       page: 1,
       type: activeType,
     },
-    onCompleted: (res) => {
-      setPokemons(res?.pokemons);
-    },
   });
+
+  const pokemonData = data?.pokemons || [];
+  const latestPage = Math.ceil(pokemonData.length / perPage);
 
   const { data: dataType } = useQuery(getPokemonClasificationTypeQuery);
   const optionDataType = [];
@@ -48,72 +45,46 @@ const HomePage: React.FC = () => {
     });
   });
 
-  const [loadPokemon, { loading: loadingPokemon }] = useLazyQuery(
-    getPokemonDetailQuery,
-    {
-      variables: {
-        name: '',
-      },
-      onCompleted: (res) => {
-        if (res?.pokemon === null) {
-          setResultSearch([]);
-          setIsFindResultSearch(false);
-        } else {
-          setResultSearch([res?.pokemon]);
-          setIsFindResultSearch(true);
-        }
-      },
-    }
-  );
-
-  const handleSearch = useCallback(
-    (e) => {
-      e.preventDefault();
-      const { value } = e.target.search;
-
-      if (value === '') {
-        setIsFindResultSearch(false);
-        setResultSearch(null);
-      } else {
-        loadPokemon({
-          variables: { name: value },
-        });
-      }
-    },
-    [loadPokemon]
-  );
-
-  const handleCloseSearch = useCallback(() => {
-    setIsFindResultSearch(false);
-    setResultSearch(null);
-  }, []);
-
   const handleSelectFilter = useCallback((e) => {
     const { value } = e.target;
-    console.log(value);
+    setHasMoreDataLoad(true);
     setActiveType(value);
   }, []);
 
-  if (error) return <p>error</p>;
+  const handleLoadMore = useCallback(() => {
+    fetchMore({
+      variables: {
+        page: latestPage + 1,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        const { length } = fetchMoreResult.pokemons;
+        if (length === 0) {
+          setHasMoreDataLoad(false);
+          return prev;
+        }
+        setHasMoreDataLoad(true);
+        const updatedData = {
+          ...prev,
+          pokemons: [...prev.pokemons, ...fetchMoreResult.pokemons],
+        };
+        return updatedData;
+      },
+    });
+  }, [fetchMore, latestPage]);
+
   return (
     <>
       <Section>
         <HeaderWrapper>
           <Title>Pokemon Index</Title>
-          <InputSearch placeholder="Search by name" onSubmit={handleSearch} />
+          <Link href="/search" passHref>
+            <InputSearch
+              placeholder="Search by name"
+              onSubmit={() => null}
+              readOnly
+            />
+          </Link>
         </HeaderWrapper>
-        {!isFindResultSearch && resultSearch?.length === 0 && (
-          <Label>
-            Search Result Not Found{' '}
-            <CloseButton onClick={handleCloseSearch}>close</CloseButton>
-          </Label>
-        )}
-        {isFindResultSearch && (
-          <Label>
-            Search Result Found{' '}
-            <CloseButton onClick={handleCloseSearch}>close</CloseButton>
-          </Label>
-        )}
       </Section>
       <Section>
         {dataType && (
@@ -125,24 +96,36 @@ const HomePage: React.FC = () => {
             />
           </FilterWrapper>
         )}
-        {(loading || loadingPokemon) && <Loading />}
-        <PokemonsWrapper>
-          {(resultSearch || pokemons || []).map((item) => {
-            const { name, number, image, types, id } = item;
-            return (
-              <Link href="[id]" as={name.toLowerCase()} passHref key={id}>
-                <PokemonItem>
-                  <PokemonCard
-                    name={name}
-                    number={number}
-                    image={image}
-                    types={types}
-                  />
-                </PokemonItem>
-              </Link>
-            );
-          })}
-        </PokemonsWrapper>
+        <InfiniteScroll
+          onLoadMore={handleLoadMore}
+          hasMore={hasMoreDataLoad}
+          loader={<Loading />}
+        >
+          {!loading && (
+            <PokemonsWrapper>
+              {(pokemonData || []).map((item) => {
+                const { name, number, image, types, id } = item;
+                return (
+                  <Link
+                    href="[id]"
+                    as={name.toLowerCase()}
+                    passHref
+                    key={id + name + number}
+                  >
+                    <PokemonItem>
+                      <PokemonCard
+                        name={name}
+                        number={number}
+                        image={image}
+                        types={types}
+                      />
+                    </PokemonItem>
+                  </Link>
+                );
+              })}
+            </PokemonsWrapper>
+          )}
+        </InfiniteScroll>
       </Section>
     </>
   );

@@ -33,7 +33,11 @@ const Select: React.FC<SelectHTMLAttributes<HTMLSelectElement> & SelectType> = (
     <SelectBox {...mainProps}>
       <Option value="">{selectPlaceholder || 'All'}</Option>
       {(optionData || []).map((item: OptionDataTypes) => {
-        return <Option value={item.value}>{item.label}</Option>;
+        return (
+          <Option key={item.label} value={item.value}>
+            {item.label}
+          </Option>
+        );
       })}
     </SelectBox>
   );

@@ -27,6 +27,7 @@ const ButtonSearch = styled(Button)`
 
 const InputSearchBase = styled(Input)`
   padding-right: 140px;
+  flex: 1;
 `;
 
 const InputSearch: React.FC<defaultType & InputSearchType> = (props) => {
