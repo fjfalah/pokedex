@@ -54,6 +54,7 @@ const HomePage: React.FC = () => {
   const { loading, error } = useQuery(getPokemonListQuery, {
     variables: {
       first: 20,
+      page: 1,
     },
     onCompleted: (res) => {
       setPokemons(res?.pokemons);
