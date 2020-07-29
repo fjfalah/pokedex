@@ -3,85 +3,68 @@ import Link from 'next/link';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
-import { InputSearch, PokemonCard, Loading, Section } from '../components';
+import {
+  InputSearch,
+  PokemonCard,
+  Loading,
+  Section,
+  Select,
+} from '../components';
+import {
+  CloseButton,
+  FilterWrapper,
+  HeaderWrapper,
+  Label,
+  PokemonItem,
+  PokemonsWrapper,
+  Title,
+} from '../components/HomeComponent';
 import getPokemonDetailQuery from '../graphql/pokemon.query';
 import getPokemonListQuery from '../graphql/pokemons.query';
-
-const HeaderWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  @media only screen and (max-width: 720px) {
-    flex-direction: column;
-  }
-`;
-
-const Title = styled.h2`
-  font-size: 40px;
-  font-weight: bold;
-  color: ${(props) => props.theme.color.green};
-`;
-
-const Label = styled.label`
-  font-size: 20px;
-  font-weight: bold;
-  color: ${(props) => props.theme.color.black};
-`;
-
-const CloseButton = styled.b`
-  cursor: pointer;
-  padding: 0 8px;
-  font-size: 15px;
-  background: ${(props) => props.theme.color.red};
-  color: ${(props) => props.theme.color.white};
-  border-radius: 8px;
-  box-shadow: ${(props) => props.theme.boxShadow};
-`;
-const PokemonsWrapper = styled.div`
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
-
-const PokemonItem = styled.a`
-  text-decoration: none;
-  color: unset;
-`;
+import getPokemonClasificationTypeQuery from '../graphql/pokemonType.query';
 
 const HomePage: React.FC = () => {
   const [pokemons, setPokemons] = useState(null);
   const [isFindResultSearch, setIsFindResultSearch] = useState(false);
   const [resultSearch, setResultSearch] = useState(null);
+  const [activeType, setActiveType] = useState(null);
   const { loading, error } = useQuery(getPokemonListQuery, {
     variables: {
       first: 20,
       page: 1,
+      type: activeType,
     },
     onCompleted: (res) => {
       setPokemons(res?.pokemons);
     },
   });
 
-  const [
-    loadPokemon,
-    { called: calledPokemon, loading: loadingPokemon, data: dataPokemon },
-  ] = useLazyQuery(getPokemonDetailQuery, {
-    variables: {
-      name: '',
-    },
-    onCompleted: (res) => {
-      if (res?.pokemon === null) {
-        setResultSearch([]);
-        setIsFindResultSearch(false);
-      } else {
-        setResultSearch([res?.pokemon]);
-        setIsFindResultSearch(true);
-      }
-    },
+  const { data: dataType } = useQuery(getPokemonClasificationTypeQuery);
+  const optionDataType = [];
+  (dataType?.pokemonClasificationType?.types || []).map((item) => {
+    return optionDataType.push({
+      value: item,
+      label: item,
+    });
   });
+
+  const [loadPokemon, { loading: loadingPokemon }] = useLazyQuery(
+    getPokemonDetailQuery,
+    {
+      variables: {
+        name: '',
+      },
+      onCompleted: (res) => {
+        if (res?.pokemon === null) {
+          setResultSearch([]);
+          setIsFindResultSearch(false);
+        } else {
+          setResultSearch([res?.pokemon]);
+          setIsFindResultSearch(true);
+        }
+      },
+    }
+  );
 
   const handleSearch = useCallback(
     (e) => {
@@ -103,6 +86,12 @@ const HomePage: React.FC = () => {
   const handleCloseSearch = useCallback(() => {
     setIsFindResultSearch(false);
     setResultSearch(null);
+  }, []);
+
+  const handleSelectFilter = useCallback((e) => {
+    const { value } = e.target;
+    console.log(value);
+    setActiveType(value);
   }, []);
 
   if (error) return <p>error</p>;
@@ -127,6 +116,15 @@ const HomePage: React.FC = () => {
         )}
       </Section>
       <Section>
+        {dataType && (
+          <FilterWrapper>
+            <Label>Filter By Pokemon Type</Label>
+            <Select
+              optionData={optionDataType || []}
+              onChange={handleSelectFilter}
+            />
+          </FilterWrapper>
+        )}
         {(loading || loadingPokemon) && <Loading />}
         <PokemonsWrapper>
           {(resultSearch || pokemons || []).map((item) => {

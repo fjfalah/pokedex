@@ -6,3 +6,4 @@ export { default as PokemonCard } from './PokemonCard';
 export { default as Button } from './Button';
 export { default as Pill } from './Pill';
 export { default as Section } from './Section';
+export { default as Select } from './Select';
