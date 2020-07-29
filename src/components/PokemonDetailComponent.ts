@@ -41,6 +41,7 @@ export const LeftWrapper = styled.div`
   margin-right: 20px;
   @media only screen and (max-width: 720px) {
     width: unset;
+    margin-right: unset;
   }
 `;
 

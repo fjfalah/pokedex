@@ -8,6 +8,10 @@ const GlobalStyles = createGlobalStyle`
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
+  html {
+    position: absolute;
+    width: 100%;
+  }
   body {
     margin: 0;
     color: ${theme.color.black};

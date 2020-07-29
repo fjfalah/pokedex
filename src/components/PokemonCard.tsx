@@ -45,7 +45,7 @@ const Image = styled.div<ImageType>`
   background-position: center;
 `;
 
-const LabelNumber = styled.label`
+const LabelNumber = styled.span`
   position: absolute;
   right: 0;
   top: 0;

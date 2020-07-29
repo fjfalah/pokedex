@@ -50,7 +50,7 @@ export default class MyDocument extends Document {
             rel="shortcut icon"
             href="https://assets.pokemon.com/static2/_ui/img/favicon.ico"
           />
-          <title>Pokedex</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
         <body>
           <Main />

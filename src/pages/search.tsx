@@ -17,7 +17,7 @@ import { ButonBack } from '../components/PokemonDetailComponent';
 import getPokemonDetailQuery from '../graphql/pokemon.query';
 
 const HomePage: React.FC = () => {
-  const [isFindResultSearch, setIsFindResultSearch] = useState(false);
+  const [resultSearch, setResultSearch] = useState(null);
   const handleBack = () => Router.back();
 
   const [loadPokemon, { loading: loadingPokemon, data }] = useLazyQuery(
@@ -28,9 +28,9 @@ const HomePage: React.FC = () => {
       },
       onCompleted: (res) => {
         if (res?.pokemon === null) {
-          setIsFindResultSearch(false);
+          setResultSearch([]);
         } else {
-          setIsFindResultSearch(true);
+          setResultSearch([res?.pokemon]);
         }
       },
     }
@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
       e.preventDefault();
       const { value } = e.target.search;
       if (value === '') {
-        setIsFindResultSearch(false);
+        setResultSearch(null);
       } else {
         loadPokemon({
           variables: { name: value },
@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
   );
 
   const handleCloseSearch = useCallback(() => {
-    setIsFindResultSearch(false);
+    setResultSearch(null);
   }, []);
 
   return (
@@ -72,7 +72,7 @@ const HomePage: React.FC = () => {
           />
         </HeaderWrapper>
         <ButonBack onClick={handleBack}>&lt; Back</ButonBack>
-        {!isFindResultSearch && pokemonData?.length === 0 && (
+        {resultSearch?.length === 0 && (
           <Label>
             Search Result Not Found{' '}
             <CloseButton onClick={handleCloseSearch}>close</CloseButton>

@@ -54,4 +54,8 @@ export const FilterWrapper = styled.div`
   > label {
     margin-right: 20px;
   }
+
+  @media only screen and (max-width: 720px) {
+    flex-direction: column;
+  }
 `;
