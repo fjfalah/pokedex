@@ -12,6 +12,10 @@ const HeaderWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  @media only screen and (max-width: 720px) {
+    flex-direction: column;
+  }
 `;
 
 const Title = styled.h2`

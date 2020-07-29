@@ -11,6 +11,10 @@ export const HeaderWrapper = styled.div`
 
 export const ContentWrapper = styled(HeaderWrapper)`
   align-items: flex-start;
+
+  @media only screen and (max-width: 720px) {
+    flex-direction: column;
+  }
 `;
 
 export const ButonBack = styled.div`
@@ -30,28 +34,52 @@ export const Number = styled.label`
   color: ${(props) => props.theme.color.red};
 `;
 
-export const ImageWrapper = styled.div`
+export const LeftWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 500px;
   margin-right: 20px;
+  @media only screen and (max-width: 720px) {
+    width: unset;
+  }
+`;
+
+export const ImageWrapper = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 500px;
+  height: 500px;
+  background-color: ${(props) => props.theme.color.white};
+  box-shadow: ${(props) => props.theme.boxShadow};
+  border-radius: 8px;
+  margin-bottom: 20px;
+`;
+
+export const NumberLabel = styled.label`
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: ${(props) => props.theme.color.red};
+  color: ${(props) => props.theme.color.white};
+  border-bottom-left-radius: 8px;
+  padding: 4px 16px;
+  font-size: 20px;
 `;
 
 export const Image = styled.div<{ url?: string }>`
   width: 500px;
   height: 500px;
-  background-color: ${(props) => props.theme.color.white};
   background-image: url(${(props) => props.url});
   background-repeat: no-repeat;
   background-size: 75% auto;
   background-position: center;
-  border-radius: 8px;
-  box-shadow: ${(props) => props.theme.boxShadow};
-  margin-bottom: 20px;
 `;
 
 export const DetailWrapper = styled.div`
   flex: 1;
+  @media only screen and (max-width: 720px) {
+    width: 100%;
+  }
 `;
 
 export const DetailItemWrapper = styled.div`

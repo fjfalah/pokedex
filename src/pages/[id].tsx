@@ -13,12 +13,14 @@ import {
   HeaderWrapper,
   Image,
   ImageWrapper,
+  LeftWrapper,
   Number,
   PillWrapper,
   PokemonItem,
   SubTitle,
   Text,
   Title,
+  NumberLabel,
 } from '../components/PokemonDetailComponent';
 import getPokemonDetailQuery from '../graphql/pokemon.query';
 import { theme } from '../themes';
@@ -72,6 +74,7 @@ const PokemonDetailPage: React.FC = () => {
       fleeRate,
       evolutionRequirements,
       evolutions,
+      types,
     } = pokemonDetail;
     return (
       <>
@@ -83,8 +86,11 @@ const PokemonDetailPage: React.FC = () => {
             </Title>
           </HeaderWrapper>
           <ContentWrapper>
-            <ImageWrapper>
-              <Image url={image} />
+            <LeftWrapper>
+              <ImageWrapper>
+                <NumberLabel>#{number}</NumberLabel>
+                <Image url={image} />
+              </ImageWrapper>
               <DetailItem title="Evolution Requirement">
                 {evolutionRequirements ? (
                   <>
@@ -124,7 +130,7 @@ const PokemonDetailPage: React.FC = () => {
                   )}
                 </PillWrapper>
               </DetailItem>
-            </ImageWrapper>
+            </LeftWrapper>
             <DetailWrapper>
               <DetailItem title="Clasification">
                 <Text> {classification}</Text>
@@ -142,6 +148,13 @@ const PokemonDetailPage: React.FC = () => {
                 <SubTitle>Weight</SubTitle>
                 <Text>Weight Max: {weight?.maximum}</Text>
                 <Text>Weight Max: {weight?.minimum}</Text>
+              </DetailItem>
+              <DetailItem title="Types">
+                <PillWrapper>
+                  {(types || []).map((item) => {
+                    return <Pill key={item}>{item}</Pill>;
+                  })}
+                </PillWrapper>
               </DetailItem>
               <DetailItem title="Attack">
                 <SubTitle>Fast</SubTitle>
