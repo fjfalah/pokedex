@@ -12,9 +12,12 @@
   "dependencies": {
     "@apollo/client": "^3.0.2",
     "@apollo/react-hooks": "^4.0.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.10.4",
     "isomorphic-unfetch": "^3.0.0",
+    "jest-styled-components": "^7.0.2",
     "next": "^9.4.4",
     "next-with-apollo": "^5.1.0",
     "react": "^16.13.1",
@@ -26,6 +29,8 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.10.4",
+    "@types/enzyme": "^3.10.5",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^26.0.7",
     "@types/next": "^9.0.0",
     "@types/node": "^14.0.26",
@@ -50,5 +55,10 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/configTest.js"
+    ]
   }
 }
