@@ -22,7 +22,7 @@
     "next-with-apollo": "^5.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "shell-quote": "^1.7.2",
+    "shell-quote": "^1.7.3",
     "styled-components": "^5.1.1",
     "subscriptions-transport-ws": "^0.9.17",
     "yarn": "^1.22.4"
